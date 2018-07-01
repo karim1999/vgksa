@@ -11,5 +11,10 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', 'HomeController@index');
+    $router->resource('/users', 'UserController');
+    $router->resource('/projects', 'ProjectController');
+    $router->resource('/categories', 'CategoryController');
+    $router->resource('/tags', 'TagController');
+    $router->resource('/settings', 'SettingController');
 
 });
