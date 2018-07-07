@@ -133,7 +133,6 @@ class UserController extends Controller
             $form->url("linkedin")->rules('nullable');
             $form->url("twitter")->rules('nullable');
             $form->url("facebook")->rules('nullable');
-
             $form->display('created_at', 'Created At');
             $form->display('updated_at', 'Updated At');
 
