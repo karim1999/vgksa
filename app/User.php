@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
 {
+
     use Notifiable;
 
     /**
@@ -49,5 +50,8 @@ class User extends Authenticatable implements JWTSubject
 
     public function jointProjects(){
         return $this->belongsToMany('App\Project', 'projects_users');
+    }
+    public function favorites(){
+        return $this->belongsToMany('App\Project', 'favorites');
     }
 }

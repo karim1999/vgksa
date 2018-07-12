@@ -2,12 +2,48 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 
 class AuthController extends Controller
 {
+    public function register(Request $request)
+    {
+//        $credentials = $request->only('name', 'email', 'password', 'country', 'city', 'phone', 'description', 'facebook', 'twitter', 'linkedin',
+//        'amount', 'idea', 'type', 'referral', 'how');
+
+        $rules = [
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users'
+        ];
+        $request->validate($rules);
+        $name = $request->name;
+        $email = $request->email;
+        $password = $request->password;
+
+        $user = User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'country' => $request->country,
+            'city' => $request->city,
+            'phone' => $request->phone,
+            'description' => $request->description,
+            'facebook' => $request->facebook,
+            'twitter' => $request->twitter,
+            'linkedin' => $request->linkedin,
+            'money' => $request->amount,
+            'idea' => $request->idea,
+            'investment_type' => $request->type,
+            'referral' => $request->referral,
+            'how' => $request->how
+        ]);
+        return response()->json(['success'=> true, 'message'=> 'Thanks for signing up!']);
+    }
     /**
      * Create a new AuthController instance.
      *
@@ -15,7 +51,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register']]);
     }
 
     /**
@@ -41,7 +77,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(auth()->user()->load('favorites')->load('projects'));
     }
 
     /**

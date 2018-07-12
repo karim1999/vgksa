@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
+    protected $with = ['user'];
+
     //
     protected $fillable = [
         'title', 'description', 'amount', 'presentation', 'study', 'img'
@@ -13,6 +15,9 @@ class Project extends Model
 
     public function jointUsers(){
         return $this->belongsToMany('App\User', 'projects_users');
+    }
+    public function lovedBy(){
+        return $this->belongsToMany('App\User', 'favorites');
     }
 
     public function tags(){
