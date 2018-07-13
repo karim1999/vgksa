@@ -77,7 +77,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user()->load('favorites')->load('projects'));
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     }
 
     /**

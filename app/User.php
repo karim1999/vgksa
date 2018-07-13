@@ -49,9 +49,9 @@ class User extends Authenticatable implements JWTSubject
     }
 
     public function jointProjects(){
-        return $this->belongsToMany('App\Project', 'projects_users');
+        return $this->belongsToMany('App\Project', 'projects_users')->withPivot('amount')->withTimestamps();
     }
     public function favorites(){
-        return $this->belongsToMany('App\Project', 'favorites');
+        return $this->belongsToMany('App\Project', 'favorites')->withTimestamps();
     }
 }

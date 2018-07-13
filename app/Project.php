@@ -14,14 +14,14 @@ class Project extends Model
     ];
 
     public function jointUsers(){
-        return $this->belongsToMany('App\User', 'projects_users');
+        return $this->belongsToMany('App\User', 'projects_users')->withPivot('amount')->withTimestamps();
     }
     public function lovedBy(){
-        return $this->belongsToMany('App\User', 'favorites');
+        return $this->belongsToMany('App\User', 'favorites')->withTimestamps();
     }
 
     public function tags(){
-        return $this->belongsToMany('App\Tag', 'projects_tags');
+        return $this->belongsToMany('App\Tag', 'projects_tags')->withTimestamps();
     }
 
     public function user(){

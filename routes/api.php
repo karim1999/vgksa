@@ -53,16 +53,29 @@ Route::group([
     Route::delete('projects/{project}', 'API\projectController@delete');
 
     //add to favorites
-    Route::post('favorites/add/{project}', function (\App\Project $project){
+    Route::post('favorites/{project}', function (\App\Project $project){
         $user= \App\User::findOrFail(auth()->user()->id);
         $user->favorites()->attach($project);
-        return response()->json(auth()->user()->load('favorites')->load('projects'));
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     });
     //remove from favorites
-    Route::post('favorites/remove/{project}', function (\App\Project $project){
+    Route::delete('favorites/{project}', function (\App\Project $project){
         $user= \App\User::findOrFail(auth()->user()->id);
         $user->favorites()->detach($project);
-        return response()->json(auth()->user()->load('favorites')->load('projects'));
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
+    });
+
+    //invest in project
+    Route::post('invest/{project}', function (\App\Project $project, Request $request){
+        $user= \App\User::findOrFail(auth()->user()->id);
+        $user->jointProjects()->attach($project, ["amount" => $request->amount]);
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
+    });
+    //remove from favorites
+    Route::delete('invest/{project}', function (\App\Project $project){
+        $user= \App\User::findOrFail(auth()->user()->id);
+        $user->jointProjects()->detach($project);
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     });
 });
 
