@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
 {
-    protected $with = ['user'];
+    protected $with = ['user', 'category'];
 
     //
     protected $fillable = [

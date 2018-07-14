@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Category;
 use App\Project;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -16,7 +18,13 @@ class ProjectController extends Controller
     public function index()
     {
         //
-        return Project::all();
+        return Project::orderBy('id', 'desc')->get();
+    }
+
+    public function paginate()
+    {
+        //
+        return Project::paginate(5);
     }
 
     /**
@@ -28,8 +36,12 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         //
-        $project= Project::create($request->all());
-        return response()->json($project, 201);
+        $user= User::findOrFail(auth()->user()->id);
+        $category= Category::findOrFail($request->category_id);
+        $project= new Project($request->all());
+        $project->category()->associate($category);
+        $user->projects()->save($project);
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
 
     }
 
@@ -57,7 +69,7 @@ class ProjectController extends Controller
         //
         $project->update($request->all());
 
-        return response()->json($project, 200);
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     }
 
     /**
@@ -71,6 +83,6 @@ class ProjectController extends Controller
         //
         $project->delete();
 
-        return response()->json(null, 204);
+        return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     }
 }

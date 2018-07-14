@@ -68,6 +68,9 @@ Route::group([
     //invest in project
     Route::post('invest/{project}', function (\App\Project $project, Request $request){
         $user= \App\User::findOrFail(auth()->user()->id);
+        if($user->jointProjects->contains($project)){
+            $user->jointProjects()->detach($project);
+        }
         $user->jointProjects()->attach($project, ["amount" => $request->amount]);
         return response()->json(auth()->user()->load('favorites', 'projects', 'jointprojects'));
     });
@@ -80,4 +83,8 @@ Route::group([
 });
 
 Route::get('projects', 'API\projectController@index');
+Route::get('categories', function(){
+    return \App\Category::all();
+});
+Route::get('projects/paginate', 'API\projectController@paginate');
 Route::get('projects/{project}', 'API\projectController@show');
