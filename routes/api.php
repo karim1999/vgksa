@@ -51,6 +51,27 @@ Route::group([
     Route::post('projects', 'API\projectController@store');
     Route::put('projects/{project}', 'API\projectController@update');
     Route::delete('projects/{project}', 'API\projectController@delete');
+    Route::post('user/img', function(Request $request){
+        $user= \App\User::findOrFail(auth()->user()->id);
+        $path = $request->file('img')->store('public/images');
+        $path= str_replace("public/","",$path);
+        $user->img= $path;
+        $user->save();
+        return response()->json($user->load('favorites', 'projects', 'jointprojects'));
+    });
+    Route::post('user/edit', function(Request $request){
+        $user= \App\User::findOrFail(auth()->user()->id);
+        $user->country= $request->country;
+        $user->city= $request->city;
+        $user->phone= $request->phone;
+        $user->description= $request->description;
+        $user->money= $request->money;
+        $user->facebook= $request->facebook;
+        $user->twitter= $request->twitter;
+        $user->linkedin= $request->linkedin;
+        $user->save();
+        return response()->json($user->load('favorites', 'projects', 'jointprojects'));
+    });
 
     //add to favorites
     Route::post('favorites/{project}', function (\App\Project $project){
